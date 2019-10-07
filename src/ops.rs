@@ -30,11 +30,10 @@ where IndexIter: Iterator,
 // Add an enumerate function that returns the new iterator for a collection that implements std::ops::Index
 pub trait SuperIndex<'a, Idx> : std::ops::Index<Idx> {
 
-    type IndexIter : IntoIterator;
-    type ItemIter : IntoIterator;
+    type IndexIter : Iterator;
+    type ItemIter : Iterator;
 
-    fn enumerate(&'a self) -> Enumerate<<Self::IndexIter as IntoIterator>::IntoIter, 
-                                        <Self::ItemIter as IntoIterator>::IntoIter>;
+    fn enumerate(&'a self) -> Enumerate<Self::IndexIter, Self::ItemIter>;
 }
 
 
@@ -45,8 +44,7 @@ impl<'a, T: 'a> SuperIndex<'a,  usize> for Vec<T>
     type IndexIter = std::ops::Range<usize>;
     type ItemIter = std::slice::Iter<'a, T>;
 
-    fn enumerate(&'a self) -> Enumerate<<Self::IndexIter as IntoIterator>::IntoIter, 
-                                     <Self::ItemIter as IntoIterator>::IntoIter>
+    fn enumerate(&'a self) -> Enumerate<Self::IndexIter, Self::ItemIter>
     {
         Enumerate{ index: (0..self.len()).into_iter(), item: self.into_iter() }
     }
@@ -60,8 +58,7 @@ impl<'a, K : 'a, V : 'a, S> SuperIndex<'a, &'_ K> for std::collections::HashMap<
     type IndexIter = std::collections::hash_map::Keys<'a, K, V>;
     type ItemIter = std::collections::hash_map::Values<'a, K, V>;
 
-    fn enumerate(&'a self) -> Enumerate<<Self::IndexIter as IntoIterator>::IntoIter, 
-                                        <Self::ItemIter as IntoIterator>::IntoIter>
+    fn enumerate(&'a self) -> Enumerate<Self::IndexIter, Self::ItemIter>
     {
         Enumerate{ index: self.keys(), item: self.values() }
     }

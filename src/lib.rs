@@ -3,23 +3,18 @@ use crate::ops::SuperIndex;
 
 /// A simple graph implementation for any collection that implements [`std::ops::Index`] and [`std::iter::IntoIterator`].
 /// This is implemented mainly with [`std::vec::Vec`] and [`std::hash::HashMap`].
-pub trait SimpleGraph<'a> {
-
-    /// type used as an index to refer to nodes. For a [`std::vec::Vec`] this would be a [`usize`], for a [`std::hash::HashMap`]
-    /// the type of the keys.
-    type I : Eq + std::hash::Hash;
-
-    /// container type. The elements of the containers are the nodes of the graph
-    type C : crate::ops::SuperIndex<'a, Self::I>;
-
+pub trait SimpleGraph<'a, I, C> 
+where I : Eq,
+      C : crate::ops::SuperIndex<'a, I> + IntoIterator
+{
     /// returns a reference to the node container.
-    fn nodes(&'a self) -> &Self::C;
+    fn nodes(&'a self) -> &C;
 
     /// returns an iterator over the indices
     //fn indices<T: std::iter::Iterator>(&self) -> T;
 
     /// gets the indices of the children of a node with index `index`.
-    fn children(&'a self, index: Self::I) -> Vec::<Self::I>;
+    fn children(&'a self, index: I) -> Vec::<I>;
 
 /*
     /// gets all ancestors of a node
@@ -28,8 +23,8 @@ pub trait SimpleGraph<'a> {
     /// Usually, this function can be implemented more efficiently and it is recommended
     /// to explicitly implement it.
     //TODO can this be cached??
-    fn ancestors(&'a self, i: Self::I) -> Vec::<Self::I> {
-        let mut res = Vec::<Self::I>::new();
+    fn ancestors(&'a self, i: I) -> Vec::<I> {
+        let mut res = Vec::<I>::new();
         let nodes = self.nodes();
         for (idx, _) in nodes.enumerate() {
 
