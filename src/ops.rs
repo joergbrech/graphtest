@@ -28,9 +28,10 @@ where IndexIter: Iterator,
 }
 
 // Add an enumerate function that returns the new iterator for a collection that implements std::ops::Index
-pub trait SuperIndex<'a, Idx> : std::ops::Index<Idx> {
+pub trait SuperIndex<'a, Idx> : std::ops::Index<Idx> 
+{
 
-    type IndexIter : Iterator;
+    type IndexIter : Iterator<Item=Idx>;
     type ItemIter : Iterator;
 
     fn enumerate(&'a self) -> Enumerate<Self::IndexIter, Self::ItemIter>;
@@ -51,7 +52,7 @@ impl<'a, T: 'a> SuperIndex<'a,  usize> for Vec<T>
 }
 
 // implement SuperIndex for HashMap
-impl<'a, K : 'a, V : 'a, S> SuperIndex<'a, &'_ K> for std::collections::HashMap<K, V, S> where
+impl<'a, K : 'a, V : 'a, S> SuperIndex<'a, &'a K> for std::collections::HashMap<K, V, S> where
     K: Eq + std::hash::Hash,
     S: std::hash::BuildHasher
 {
