@@ -1,41 +1,25 @@
 pub mod ops;
-/*
-impl<K, Q: ?Sized, V, S> SuperIndex<&'_ Q> for std::collections::HashMap<K, V, S> where
-    K: Eq + std::hash::Hash + std::borrow::Borrow<Q>,
-    Q: Eq + std::hash::Hash,
-    S: std::hash::BuildHasher
-{
-    type IndexIter = std::collections::hash_map::Keys<'_, K, V>;
-    type ItemIter = std::collections::hash_map::Values<K,V>;
-
-    fn enumerate(&self) -> Enumerate<<Self::IndexIter as IntoIterator>::IntoIter, 
-                                     <Self::ItemIter as IntoIterator>::IntoIter>
-    {
-        Enumerate{ index: self.keys(), item: self.values() }
-    }
-}
-*/
-
+use crate::ops::SuperIndex;
 
 /// A simple graph implementation for any collection that implements [`std::ops::Index`] and [`std::iter::IntoIterator`].
 /// This is implemented mainly with [`std::vec::Vec`] and [`std::hash::HashMap`].
-pub trait SimpleGraph {
+pub trait SimpleGraph<'a> {
 
     /// type used as an index to refer to nodes. For a [`std::vec::Vec`] this would be a [`usize`], for a [`std::hash::HashMap`]
     /// the type of the keys.
     type I : Eq + std::hash::Hash;
 
     /// container type. The elements of the containers are the nodes of the graph
-    type C : std::ops::Index<Self::I> + std::iter::IntoIterator<Item=Self::I>;
+    type C : crate::ops::SuperIndex<'a, Self::I>;
 
     /// returns a reference to the node container.
-    fn nodes(&self) -> &Self::C;
+    fn nodes(&'a self) -> &Self::C;
 
     /// returns an iterator over the indices
     //fn indices<T: std::iter::Iterator>(&self) -> T;
 
     /// gets the indices of the children of a node with index `index`.
-    fn children(&self, index: Self::I) -> Vec::<Self::I>;
+    fn children(&'a self, index: Self::I) -> Vec::<Self::I>;
 
 /*
     /// gets all ancestors of a node
@@ -44,7 +28,7 @@ pub trait SimpleGraph {
     /// Usually, this function can be implemented more efficiently and it is recommended
     /// to explicitly implement it.
     //TODO can this be cached??
-    fn ancestors(&self, i: Self::I) -> Vec::<Self::I> {
+    fn ancestors(&'a self, i: Self::I) -> Vec::<Self::I> {
         let mut res = Vec::<Self::I>::new();
         let nodes = self.nodes();
         for (idx, _) in nodes.enumerate() {
