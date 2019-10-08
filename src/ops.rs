@@ -92,6 +92,10 @@ mod tests {
         assert_eq!(e.next(), Some((2, &30)));
         assert_eq!(e.next(), Some((3, &40)));
         assert_eq!(e.next(), None);
+
+        for (index, item) in v.enumerate() {
+            assert_eq!(&v[index], item);
+        }
     }
 
     #[test]
@@ -115,6 +119,10 @@ mod tests {
                 assert_eq!(value, &"Mallorca")
             }
         }
-        assert_eq!(count, 3)
+        assert_eq!(count, 3);
+
+        for (index, item) in capitals.enumerate() {
+            assert_eq!(&capitals[index], item);
+        }
     }
 }
