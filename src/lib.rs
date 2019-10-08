@@ -6,7 +6,7 @@ use crate::ops::SuperIndex;
 
 use std::vec::Vec;
 
-/// A simple graph implementation for any collection that implements [`std::ops::Index`] and [`std::iter::IntoIterator`].
+/// A simple graph implementation for any collection that implements [`SuperIndex`] and [`IntoIterator`].
 pub trait SimpleGraph<'a, I : Eq + Copy> : SuperIndex<'a, I> + IntoIterator
 {
     /// gets the indices of the children of a node with index `index`.
