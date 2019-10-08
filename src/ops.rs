@@ -4,9 +4,9 @@
 //! [this stackoverflow question](https://stackoverflow.com/questions/30630810/using-generic-iterators-instead-of-specific-list-types) 
 //! 
 //!  **Cons:**
-//! - Need to explicitly implement SuperIndex for all my types
+//!  - SuperIndex indices cannot be quite as generic as the ones for Index, e.g. slices are not allowed.
+//!  - Need to explicitly implement SuperIndex for all my types
 //!  - In each implementation, I must make sure that the two iterators are ordered consistently
-//!  - SuperIndex indices cannot be quite as generic as the ones for Index
 
 
 /// an Enumerate struct that has two iterators, one for the index of a collection and one for the item at this index.
