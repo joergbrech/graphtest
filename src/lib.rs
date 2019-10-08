@@ -1,3 +1,5 @@
+//! an examplatory graph module with minimal functionality
+
 pub mod ops;
 use crate::ops::SuperIndex;
 
@@ -13,9 +15,6 @@ pub trait SimpleGraph<'a>
     /// returns a reference to the node container.
     fn nodes(&'a self) -> &Self::C;
 
-    /// returns an iterator over the indices
-    //fn indices<T: std::iter::Iterator>(&self) -> T;
-
     /// gets the indices of the children of a node with index `index`.
     fn children(&'a self, index: Self::I) -> Vec::<Self::I>;
 
@@ -27,8 +26,7 @@ pub trait SimpleGraph<'a>
     //TODO can this be cached??
     fn ancestors(&'a self, i: Self::I) -> Vec::<Self::I> {
         let mut res = Vec::<Self::I>::new();
-        let nodes = self.nodes();
-        for (idx, _) in nodes.enumerate() {
+        for (idx, _) in self.nodes().enumerate() {
 
             let children = self.children(idx);
             for child_idx in children {
