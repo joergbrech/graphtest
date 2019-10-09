@@ -85,8 +85,6 @@ pub trait SimpleGraph<'a, I : Eq + Hash + Copy>
 
 }
 
-/*
-
 /// a node for any data with adjacency information
 pub struct Node<I,D> {
     data: D,
@@ -96,12 +94,19 @@ pub struct Node<I,D> {
 /// a graph that stores its nodes as a [`Vec`]
 pub struct VGraph<D>(Vec<Node<usize,D>>);
 
-impl<'a, D> SimpleGraph<'a,usize> for VGraph<D> {
-    fn children(&'a self, i : usize) -> Vec<I> {
-        self.0[&i].adj.clone() // this is ugly
+impl<'a, D : 'a> SimpleGraph<'a,usize> for VGraph<D> {
+
+    type C = Vec<Node<usize,D>>;
+
+    fn nodes(&self) -> &Self::C {
+        &self.0
+    }
+
+    fn children(&self, i : usize) -> Vec<usize> {
+        self.0[i].adj.clone() // this is ugly
     }
 }
-*/
+
 
 #[cfg(test)]
 mod tests { 
